@@ -7,18 +7,26 @@ import Popup from "./component/Popup";
 
 function App() {
   const[popup, setpopup] = useState(true);
+  const[username, setusername] = useState("");
 
   return (
     
     <div className="h-dvh w-full overflow-hidden bg-amber-200 flex items-center justify-center p-4 sm:p-8">
+
       {/* popup at start */}
-      {popup && <Popup onContinue={()=>setpopup(false)}/>}
+      {popup && (
+        <Popup 
+        onContinue={(name) => {setusername(name);  setpopup(false)}} />
+      )}
       {/* chat section */}
       <div className="flex flex-col w-full max-w-2xl h-full max-h-200 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden">
         {/* header */}
-        <div className="px-3 py-3 border-b border-gray-400 flex items-center justify-between">
+        <div className="px-3 py-2.5 border-b border-orange-700 flex items-center justify-between">
           <p className="text-sm font-mono text-gray-700">user typing</p>
-          <p className="font-medium text-md font-mono">user name</p>
+          <div className="px-2 py-1 border border-orange-700  rounded-md">
+            <p className="text-lg font-normal text-orange-800">{username}</p>
+          </div>
+          
         </div>
 
         {/* messages (only this area scrolls) */}

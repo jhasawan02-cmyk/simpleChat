@@ -1,24 +1,39 @@
+import { useState } from "react";
 
 type PopUpProp = {
-  onContinue: () => void;
+  onContinue: (name:string) => void;
 };
 
 function Popup({ onContinue }: PopUpProp) {
+  const [name, setusername] = useState("");
+
+  function handleSubmit(e:React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+  const trimmedName = name.trim();
+  if(trimmedName){
+    onContinue(trimmedName);
+  }
+  }
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="border rounded-md p-2 flex gap-5 bg-amber-200 shadow-sm">
+      <form onSubmit={handleSubmit}className="border rounded-md p-2 flex gap-5 bg-amber-200 shadow-sm">
         <input
           placeholder="name"
+          value = {name}
+          onChange = {(e) => setusername(e.target.value)}
           className="rounded-md border border-gray-300 bg-white p-2 outline-none "
+          required
+          autoFocus
         />
 
         <button
-          onClick={onContinue}
           className="rounded-md bg-white p-1 font-mono hover:bg-yellow-300"
+          type="submit"
         >
           Continue
         </button>
-      </div>
+      </form>
     </div>
   );
 }
