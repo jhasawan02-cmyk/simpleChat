@@ -1,10 +1,18 @@
+
+import { useState } from "react";
 import "./App.css";
 import Message from "./component/Message";
+import Popup from "./component/Popup";
 
 
 function App() {
+  const[popup, setpopup] = useState(true);
+
   return (
+    
     <div className="h-dvh w-full overflow-hidden bg-amber-200 flex items-center justify-center p-4 sm:p-8">
+      {/* popup at start */}
+      {popup && <Popup onContinue={()=>setpopup(false)}/>}
       {/* chat section */}
       <div className="flex flex-col w-full max-w-2xl h-full max-h-200 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden">
         {/* header */}
@@ -28,7 +36,7 @@ function App() {
             <button
               type="button"
               aria-label="Send message"
-              className="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center justify-center h-8 w-8 rounded-full bg-green-500 text-white hover:bg-green-600 active:bg-green-700 transition-colors cursor-pointer"
+              className="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center justify-center h-8 w-8 rounded-full bg-yellow-500 text-white hover:bg-yellow-300 active:bg-yellow-300 transition-colors cursor-pointer"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
