@@ -1,4 +1,6 @@
 import "./App.css";
+import Message from "./component/Message";
+
 
 function App() {
   return (
@@ -12,18 +14,42 @@ function App() {
         </div>
 
         {/* messages (only this area scrolls) */}
-        <div className="flex-1 overflow-y-auto p-5">chat section</div>
+        <div className="flex-1 overflow-y-auto p-2">
+          <Message />
+        </div>
 
         {/* input area */}
         <div className="p-4 border-t border-gray-200">
-          <input
-            className="w-full rounded-md border border-gray-300 px-3 py-2 outline-none focus:ring-2 focus:ring-amber-400"
-            placeholder="message..."
-          />
+          <div className="relative">
+            <input
+              className="w-full rounded-md border border-gray-300 pl-3 pr-12 py-2 outline-none focus:ring-2 focus:ring-amber-400"
+              placeholder="message..."
+            />
+            <button
+              type="button"
+              aria-label="Send message"
+              className="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center justify-center h-8 w-8 rounded-full bg-green-500 text-white hover:bg-green-600 active:bg-green-700 transition-colors cursor-pointer"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="h-4 w-4"
+              >
+                <path d="M5 12h14" />
+                <path d="M13 6l6 6-6 6" />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
     </div>
   );
 }
+
 
 export default App;
