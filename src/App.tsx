@@ -30,7 +30,7 @@ function App() {
         </div>
 
         {/* messages (only this area scrolls) */}
-        <div className="flex-1 overflow-y-auto p-2">
+        <div className="flex-1 overflow-y-auto p-2 border ">
           <Message />
         </div>
 
@@ -44,7 +44,7 @@ function App() {
             <button
               type="button"
               aria-label="Send message"
-              className="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center justify-center h-8 w-8 rounded-full bg-yellow-500 text-white hover:bg-yellow-300 active:bg-yellow-300 transition-colors cursor-pointer"
+              className="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center justify-center h-10 w-10 rounded-full bg-yellow-500 text-white hover:bg-yellow-300 active:bg-yellow-300 transition-colors cursor-pointer"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
