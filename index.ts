@@ -15,7 +15,11 @@ const io = new Server(server,{
 });
 
 io.on('connection',(socket)=>{
-    console.log(`user connected: ${socket.id}`);
+    
+
+    socket.on("room1", (name) => {
+    console.log(`${name} joined room1 with user id: ${socket.id}`);
+  });
 })
 
 // //route
