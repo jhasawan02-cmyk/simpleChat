@@ -1,4 +1,4 @@
-
+import type { Socket } from "socket.io-client";
 import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import Message from "./component/Message";
@@ -7,22 +7,31 @@ import { connectWS } from "./we";
 
 
 function App() {
-  const socket = useRef(null);
-  const[popup, setpopup] = useState(true);
-  const[username, setusername] = useState("");
+  const socket = useRef<Socket | null>(null);
+  const [popup, setpopup] = useState(true);
+  const [username, setusername] = useState("");
 
 
-  useEffect(() =>{
+  useEffect(() => {
     socket.current = connectWS();
-  },[])
+
+    socket.current.on("connect", () => {
+
+    });
+    return () => {
+    socket.current?.disconnect();
+    socket.current = null;
+  };
+  }, [])
   return (
-    
+
     <div className="h-dvh w-full overflow-hidden bg-amber-200 flex items-center justify-center p-4 sm:p-8">
 
       {/* popup at start */}
       {popup && (
-        <Popup 
-        onContinue={(name) => {setusername(name);  setpopup(false)}} />
+        <Popup
+          socket={socket}
+          onContinue={(name) => { setusername(name); setpopup(false); }} />
       )}
       {/* chat section */}
       <div className="flex flex-col w-full max-w-2xl h-full max-h-200 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden">
@@ -32,7 +41,7 @@ function App() {
           <div className="px-2 py-1 border border-orange-700  rounded-md">
             <p className="text-lg font-normal text-orange-800">{username}</p>
           </div>
-          
+
         </div>
 
         {/* messages (only this area scrolls) */}
