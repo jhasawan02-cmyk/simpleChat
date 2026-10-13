@@ -1,14 +1,20 @@
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import Message from "./component/Message";
 import Popup from "./component/Popup";
+import { connectWS } from "./we";
 
 
 function App() {
+  const socket = useRef(null);
   const[popup, setpopup] = useState(true);
   const[username, setusername] = useState("");
 
+
+  useEffect(() =>{
+    socket.current = connectWS();
+  },[])
   return (
     
     <div className="h-dvh w-full overflow-hidden bg-amber-200 flex items-center justify-center p-4 sm:p-8">
