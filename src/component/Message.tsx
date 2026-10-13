@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 //message type
 type messageType = {
   id: number;
@@ -6,8 +8,11 @@ type messageType = {
   text: string;
   time: string;
 }
-//dummy message list :-
-const message: messageType[] = [
+
+
+function Message() {
+  const[message, setMessage] = useState<messageType[]>([
+    //dummy message list 
   {
     id: 1,
     senderId: "user1",
@@ -29,9 +34,7 @@ const message: messageType[] = [
     text: "How is the project going?",
     time: "10:32 AM",
   },
-];
-function Message() {
-
+  ]);
 
   return (
     <div className="gap-3 flex flex-col">
