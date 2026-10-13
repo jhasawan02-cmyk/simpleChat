@@ -53,13 +53,13 @@ function Message() {
                 }`}
             >
               {!isOwnMessage && (
-                <p className="mb-1 text-xs font-normal text-slate-700">
+                <p className="mb-1 text-[12px] font-normal text-slate-700">
                   {message.senderName}
                 </p>
               )}
               <p className="wrap-break-words text-sm">{message.text}</p>
 
-              <p className="mt-1 text-right text-xs font-light text-gray-500">
+              <p className="mt-1 text-right text-[12px] font-light text-gray-500">
                 {message.time}
               </p>
             </div>
