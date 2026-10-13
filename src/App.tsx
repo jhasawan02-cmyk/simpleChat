@@ -35,10 +35,10 @@ function App() {
         </div>
 
         {/* input area */}
-        <div className="p-4 border-t border-gray-200">
+        <div className="p-1 border-t border-gray-200">
           <div className="relative">
             <input
-              className="w-full rounded-md border border-gray-300 pl-3 pr-12 py-2 outline-none focus:ring-2 focus:ring-amber-400"
+              className="w-full rounded-md border border-gray-300 pl-3 pr-12 py-2 outline-none focus:ring-2 focus:ring-amber-300"
               placeholder="message..."
             />
             <button
