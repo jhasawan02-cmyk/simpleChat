@@ -49,17 +49,17 @@ function Message() {
               }`}
           >
             <div
-              className={`max-w-[75%] rounded-xl px-3 py-2 ${isOwnMessage ? "bg-amber-200" : "bg-gray-100"
+              className={`max-w-[75%] rounded-xl px-2 py-2 shadow-md ${isOwnMessage ? "bg-amber-200" : "bg-gray-100"
                 }`}
             >
               {!isOwnMessage && (
-                <p className="mb-1 text-xs font-semibold text-orange-700">
+                <p className="mb-1 text-xs font-normal text-slate-700">
                   {message.senderName}
                 </p>
               )}
               <p className="wrap-break-words text-sm">{message.text}</p>
 
-              <p className="mt-1 text-right text-xs text-gray-500">
+              <p className="mt-1 text-right text-xs font-light text-gray-500">
                 {message.time}
               </p>
             </div>

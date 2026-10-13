@@ -21,7 +21,7 @@ function App() {
       {/* chat section */}
       <div className="flex flex-col w-full max-w-2xl h-full max-h-200 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden">
         {/* header */}
-        <div className="px-3 py-2.5 border-b border-orange-700 flex items-center justify-between">
+        <div className="px-3 py-2.5 border-b-2 border-amber-500 flex items-center justify-between">
           <p className="text-sm font-mono text-gray-700">user typing</p>
           <div className="px-2 py-1 border border-orange-700  rounded-md">
             <p className="text-lg font-normal text-orange-800">{username}</p>
@@ -30,7 +30,7 @@ function App() {
         </div>
 
         {/* messages (only this area scrolls) */}
-        <div className="flex-1 overflow-y-auto p-2 border ">
+        <div className="flex-1 overflow-y-auto p-2">
           <Message />
         </div>
 
