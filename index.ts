@@ -8,7 +8,11 @@ const app = express();
 const server = createServer(app);
 
 //making an instance of the the socket server
-const io = new Server(server);
+const io = new Server(server,{
+    cors:{
+        origin:"*"
+    }
+});
 
 io.on('connection',(socket)=>{
     console.log(`user connected: ${socket.id}`);
