@@ -17,7 +17,7 @@ function Popup({ onContinue, socket }: PopUpProp) {
 
     if (!trimmedName) return;
 
-    socket.current?.emit("JoinRoom", trimmedName);
+    socket.current?.emit("room1", trimmedName);
     onContinue(trimmedName);
   }
 
