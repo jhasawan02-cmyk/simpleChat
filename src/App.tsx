@@ -95,6 +95,7 @@ function App() {
             />
             <button
               type="button"
+              onClick={sendMessage}
               aria-label="Send message"
               className="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center justify-center h-10 w-10 rounded-full bg-yellow-500 text-white hover:bg-yellow-300 active:bg-yellow-300 transition-colors cursor-pointer"
             >
