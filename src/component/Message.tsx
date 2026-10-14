@@ -1,7 +1,7 @@
-import { useState } from "react";
+
 
 //message type
-type messageType = {
+export type messageType = {
   id: number;
   senderId: string;
   senderName: string;
@@ -9,37 +9,42 @@ type messageType = {
   time: string;
 }
 
+type Props = {
+  message: messageType[];
+  mySocketId?: string;
+};
 
-function Message() {
-  const[message, setMessage] = useState<messageType[]>([
-    //dummy message list 
-  {
-    id: 1,
-    senderId: "user1",
-    senderName: "Rahul",
-    text: "Hey everyone!",
-    time: "10:30 AM",
-  },
-  {
-    id: 2,
-    senderId: "me",
-    senderName: "You",
-    text: "Hey Rahul!",
-    time: "10:31 AM",
-  },
-  {
-    id: 3,
-    senderId: "user2",
-    senderName: "Aman",
-    text: "How is the project going?",
-    time: "10:32 AM",
-  },
-  ]);
+
+function Message({ message, mySocketId }: Props) {
+  // const[message, setMessage] = useState<messageType[]>([
+  //   //dummy message list 
+  // {
+  //   id: 1,
+  //   senderId: "user1",
+  //   senderName: "Rahul",
+  //   text: "Hey everyone!",
+  //   time: "10:30 AM",
+  // },
+  // {
+  //   id: 2,
+  //   senderId: "me",
+  //   senderName: "You",
+  //   text: "Hey Rahul!",
+  //   time: "10:31 AM",
+  // },
+  // {
+  //   id: 3,
+  //   senderId: "user2",
+  //   senderName: "Aman",
+  //   text: "How is the project going?",
+  //   time: "10:32 AM",
+  // },
+  // ]);
 
   return (
     <div className="gap-3 flex flex-col">
       {message.map((message) => {
-        const isOwnMessage = message.senderId === "me";
+        const isOwnMessage = message.senderId === mySocketId;
 
 
         return (

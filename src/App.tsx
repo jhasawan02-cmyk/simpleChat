@@ -1,37 +1,72 @@
 import type { Socket } from "socket.io-client";
 import { useEffect, useRef, useState } from "react";
 import "./App.css";
-import Message from "./component/Message";
+import Message, { type messageType } from "./component/Message";
 import Popup from "./component/Popup";
 import { connectWS } from "./we";
-
 
 function App() {
   const socket = useRef<Socket | null>(null);
   const [popup, setpopup] = useState(true);
   const [username, setusername] = useState("");
-
-
+  const [messages, setMessages] = useState<messageType[]>([]);
+  const [input, setInput] = useState("");
+  const [mySocketId, setMySocketId] = useState<string>();
   useEffect(() => {
     socket.current = connectWS();
 
     socket.current.on("connect", () => {
-
+      setMySocketId(socket.current?.id);
     });
+
+    socket.current.on("roomNotice", (name: string) => {
+      console.log(`User ${name} has joined the room.`);
+    });
+
+    socket.current.on("message", (msg: messageType) => {
+      setMessages((prev) => [...prev, msg]);
+    });
+
     return () => {
-    socket.current?.disconnect();
-    socket.current = null;
+      socket.current?.off("connect");
+      socket.current?.off("roomNotice");
+      socket.current?.off("message");
+      socket.current?.disconnect();
+      socket.current = null;
+    };
+  }, []);
+
+  const sendMessage = () => {
+    const text = input.trim();
+    if (!text) return;
+
+    const msg: messageType = {
+      id: Date.now(),
+      senderId: mySocketId ?? "me",
+      senderName: username,
+      text,
+      time: new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+    };
+
+    socket.current?.emit("message", msg);
+    setMessages((prev) => [...prev, msg]); // show your own message immediately
+    setInput("");
   };
-  }, [])
+
   return (
-
     <div className="h-dvh w-full overflow-hidden bg-amber-200 flex items-center justify-center p-4 sm:p-8">
-
       {/* popup at start */}
       {popup && (
         <Popup
           socket={socket}
-          onContinue={(name) => { setusername(name); setpopup(false); }} />
+          onContinue={(name) => {
+            setusername(name);
+            setpopup(false);
+          }}
+        />
       )}
       {/* chat section */}
       <div className="flex flex-col w-full max-w-2xl h-full max-h-200 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden">
@@ -41,18 +76,20 @@ function App() {
           <div className="px-2 py-1 border border-orange-700  rounded-md">
             <p className="text-lg font-normal text-orange-800">{username}</p>
           </div>
-
         </div>
 
         {/* messages (only this area scrolls) */}
-        <div className="flex-1 overflow-y-auto p-2">
-          <Message />
+        <div className="flex-1 overflow-y-auto overflow-x-hidden p-2 [scrollbar-none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+          <Message message={messages} mySocketId={mySocketId} />
         </div>
 
         {/* input area */}
         <div className="p-1 border-t border-gray-200">
           <div className="relative">
             <input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && sendMessage()}
               className="w-full rounded-md border border-gray-300 pl-3 pr-12 py-2 outline-none focus:ring-2 focus:ring-amber-300"
               placeholder="message..."
             />
@@ -81,6 +118,5 @@ function App() {
     </div>
   );
 }
-
 
 export default App;
