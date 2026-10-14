@@ -31,6 +31,10 @@ io.on('connection',(socket)=>{
     socket.on("message",(msg)=>{
         socket.broadcast.emit("message",msg);
     })
+    //typer username notice
+    socket.on("typing", (name) => {
+    socket.broadcast.emit("typing", name);
+});
 })
 
 // //route
