@@ -38,7 +38,7 @@ useEffect(() => {
     setTypingUsers((prev) => (prev.includes(name) ? prev : [...prev, name]));
     clearTimeout(typingTimers.current[name]);
     // auto-remove if no new "typing" event arrives within 2 seconds
-    typingTimers.current[name] = setTimeout(() => removeTyping(name), 2000);
+    typingTimers.current[name] = setTimeout(() => removeTyping(name), 1000);
   });
 
   socket.current.on("message", (msg: messageType) => {

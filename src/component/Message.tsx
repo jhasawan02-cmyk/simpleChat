@@ -62,7 +62,7 @@ function Message({ message, mySocketId }: Props) {
                   {message.senderName}
                 </p>
               )}
-              <p className="wrap-break-words text-sm">{message.text}</p>
+              <p className="break-words text-sm">{message.text}</p>
 
               <p className="mt-1 text-right text-[12px] font-light text-gray-500">
                 {message.time}
