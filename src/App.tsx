@@ -16,47 +16,47 @@ function App() {
   const [typingUsers, setTypingUsers] = useState<string[]>([]);
   const typingTimers = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
 
-useEffect(() => {
-  socket.current = connectWS();
+  useEffect(() => {
+    socket.current = connectWS();
 
-  const removeTyping = (name: string) => {
-    clearTimeout(typingTimers.current[name]);
-    delete typingTimers.current[name];
-    setTypingUsers((prev) => prev.filter((n) => n !== name));
-  };
+    const removeTyping = (name: string) => {
+      clearTimeout(typingTimers.current[name]);
+      delete typingTimers.current[name];
+      setTypingUsers((prev) => prev.filter((n) => n !== name));
+    };
 
-  socket.current.on("connect", () => {
-    setMySocketId(socket.current?.id);
-  });
+    socket.current.on("connect", () => {
+      setMySocketId(socket.current?.id);
+    });
 
-  socket.current.on("roomNotice", (name: string) => {
-    console.log(`User ${name} has joined the room.`);
-  });
+    socket.current.on("roomNotice", (name: string) => {
+      console.log(`User ${name} has joined the room.`);
+    });
 
-  // for username typing notice
-  socket.current.on("typing", (name: string) => {
-    setTypingUsers((prev) => (prev.includes(name) ? prev : [...prev, name]));
-    clearTimeout(typingTimers.current[name]);
-    // auto-remove if no new "typing" event arrives within 2 seconds
-    typingTimers.current[name] = setTimeout(() => removeTyping(name), 1000);
-  });
+    // for username typing notice
+    socket.current.on("typing", (name: string) => {
+      setTypingUsers((prev) => (prev.includes(name) ? prev : [...prev, name]));
+      clearTimeout(typingTimers.current[name]);
+      // auto-remove if no new "typing" event arrives within 2 seconds
+      typingTimers.current[name] = setTimeout(() => removeTyping(name), 1000);
+    });
 
-  socket.current.on("message", (msg: messageType) => {
-    setMessages((prev) => [...prev, msg]);
-    removeTyping(msg.senderName);
-  });
+    socket.current.on("message", (msg: messageType) => {
+      setMessages((prev) => [...prev, msg]);
+      removeTyping(msg.senderName);
+    });
 
-  return () => {
-    Object.values(typingTimers.current).forEach(clearTimeout);
-    typingTimers.current = {};
-    socket.current?.off("connect");
-    socket.current?.off("roomNotice");
-    socket.current?.off("typing");
-    socket.current?.off("message");
-    socket.current?.disconnect();
-    socket.current = null;
-  };
-}, []);
+    return () => {
+      Object.values(typingTimers.current).forEach(clearTimeout);
+      typingTimers.current = {};
+      socket.current?.off("connect");
+      socket.current?.off("roomNotice");
+      socket.current?.off("typing");
+      socket.current?.off("message");
+      socket.current?.disconnect();
+      socket.current = null;
+    };
+  }, []);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value);
@@ -101,14 +101,18 @@ useEffect(() => {
       <div className="flex flex-col w-full max-w-2xl h-full max-h-200 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden">
         {/* header */}
         <div className="px-3 py-2.5 border-b-2 border-amber-500 flex items-center justify-between">
-          <p className="text-sm font-mono text-gray-700 truncate">
-            {typingUsers.length === 0
-              ? ""
-              : typingUsers.length === 1
-                ? `${typingUsers[0]} is typing...`
-                : `${typingUsers.join(", ")} are typing...`}
-          </p>
-          <div className="px-2 py-1 border border-orange-700  rounded-md">
+          <div className="min-w-0">
+            <p className="text-lg font-bold text-amber-800">Chat Application</p>
+            <p className="h-5 text-md font-mono text-gray-800 truncate">
+              {typingUsers.length === 0
+                ? ""
+                : typingUsers.length === 1
+                  ? `${typingUsers[0]} is typing...`
+                  : `${typingUsers.join(", ")} are typing...`}
+            </p>
+          </div>
+
+          <div className="px-2 py-1 border border-orange-700 rounded-md">
             <p className="text-lg font-normal text-orange-800">{username}</p>
           </div>
         </div>
