@@ -1,5 +1,5 @@
 import type { Socket } from "socket.io-client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import "./App.css";
 import Message, { type messageType } from "./component/Message";
 import Popup from "./component/Popup";
@@ -12,29 +12,58 @@ function App() {
   const [messages, setMessages] = useState<messageType[]>([]);
   const [input, setInput] = useState("");
   const [mySocketId, setMySocketId] = useState<string>();
-  useEffect(() => {
-    socket.current = connectWS();
 
-    socket.current.on("connect", () => {
-      setMySocketId(socket.current?.id);
-    });
+  const [typingUsers, setTypingUsers] = useState<string[]>([]);
+  const typingTimers = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
 
-    socket.current.on("roomNotice", (name: string) => {
-      console.log(`User ${name} has joined the room.`);
-    });
+useEffect(() => {
+  socket.current = connectWS();
 
-    socket.current.on("message", (msg: messageType) => {
-      setMessages((prev) => [...prev, msg]);
-    });
+  const removeTyping = (name: string) => {
+    clearTimeout(typingTimers.current[name]);
+    delete typingTimers.current[name];
+    setTypingUsers((prev) => prev.filter((n) => n !== name));
+  };
 
-    return () => {
-      socket.current?.off("connect");
-      socket.current?.off("roomNotice");
-      socket.current?.off("message");
-      socket.current?.disconnect();
-      socket.current = null;
-    };
-  }, []);
+  socket.current.on("connect", () => {
+    setMySocketId(socket.current?.id);
+  });
+
+  socket.current.on("roomNotice", (name: string) => {
+    console.log(`User ${name} has joined the room.`);
+  });
+
+  // for username typing notice
+  socket.current.on("typing", (name: string) => {
+    setTypingUsers((prev) => (prev.includes(name) ? prev : [...prev, name]));
+    clearTimeout(typingTimers.current[name]);
+    // auto-remove if no new "typing" event arrives within 2 seconds
+    typingTimers.current[name] = setTimeout(() => removeTyping(name), 2000);
+  });
+
+  socket.current.on("message", (msg: messageType) => {
+    setMessages((prev) => [...prev, msg]);
+    removeTyping(msg.senderName);
+  });
+
+  return () => {
+    Object.values(typingTimers.current).forEach(clearTimeout);
+    typingTimers.current = {};
+    socket.current?.off("connect");
+    socket.current?.off("roomNotice");
+    socket.current?.off("typing");
+    socket.current?.off("message");
+    socket.current?.disconnect();
+    socket.current = null;
+  };
+}, []);
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value);
+    if (e.target.value.trim()) {
+      socket.current?.emit("typing", username);
+    }
+  };
 
   const sendMessage = () => {
     const text = input.trim();
@@ -72,7 +101,13 @@ function App() {
       <div className="flex flex-col w-full max-w-2xl h-full max-h-200 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden">
         {/* header */}
         <div className="px-3 py-2.5 border-b-2 border-amber-500 flex items-center justify-between">
-          <p className="text-sm font-mono text-gray-700">user typing</p>
+          <p className="text-sm font-mono text-gray-700 truncate">
+            {typingUsers.length === 0
+              ? ""
+              : typingUsers.length === 1
+                ? `${typingUsers[0]} is typing...`
+                : `${typingUsers.join(", ")} are typing...`}
+          </p>
           <div className="px-2 py-1 border border-orange-700  rounded-md">
             <p className="text-lg font-normal text-orange-800">{username}</p>
           </div>
@@ -88,7 +123,7 @@ function App() {
           <div className="relative">
             <input
               value={input}
-              onChange={(e) => setInput(e.target.value)}
+              onChange={handleInputChange}
               onKeyDown={(e) => e.key === "Enter" && sendMessage()}
               className="w-full rounded-md border border-gray-300 pl-3 pr-12 py-2 outline-none focus:ring-2 focus:ring-amber-300"
               placeholder="message..."
