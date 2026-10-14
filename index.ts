@@ -19,7 +19,18 @@ io.on('connection',(socket)=>{
 
     socket.on("room1", (name) => {
     console.log(`${name} joined room1 with user id: ${socket.id}`);
+
+    // //emit  anotice of new joiner to all
+    // io.emit("roomNotice",name);
+
+    //broadcasting to evry one other then the joinee
+    socket.broadcast.emit("roomNotice",name);
   });
+
+    //broadcasting message to all participants
+    socket.on("message",(msg)=>{
+        socket.broadcast.emit("message",msg);
+    })
 })
 
 // //route
