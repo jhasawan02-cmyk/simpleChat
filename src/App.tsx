@@ -107,8 +107,8 @@ function App() {
               {typingUsers.length === 0
                 ? ""
                 : typingUsers.length === 1
-                  ? `${typingUsers[0]} is typing...`
-                  : `${typingUsers.join(", ")} are typing...`}
+                  ? `${typingUsers[0]} is typing`
+                  : `${typingUsers.join(", ")} are typing`}
             </p>
           </div>
 
