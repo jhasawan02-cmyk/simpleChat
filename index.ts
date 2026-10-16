@@ -28,6 +28,9 @@ io.on('connection',(socket)=>{
 
     //broadcasting to evry one other then the joinee
     socket.broadcast.emit("roomNotice",name);
+    // online count
+    joined.add(socket.id);
+    broadcastCount();
   });
 
     //broadcasting message to all participants
@@ -37,17 +40,11 @@ io.on('connection',(socket)=>{
     //typer username notice
     socket.on("typing", (name) => {
     socket.broadcast.emit("typing", name);
-
-    // online count
-    socket.on("room1", () => {
-        joined.add(socket.id);
-        broadcastCount();
     });
 
     socket.on("disconnect", () => {
         if (joined.delete(socket.id)) broadcastCount();
     });
-});
 })
 
 // //route
