@@ -12,7 +12,7 @@ function App() {
   const [messages, setMessages] = useState<messageType[]>([]);
   const [input, setInput] = useState("");
   const [mySocketId, setMySocketId] = useState<string>();
-
+  const [onlineCount, setOnlineCount] = useState(0);
   const [typingUsers, setTypingUsers] = useState<string[]>([]);
   const typingTimers = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
 
@@ -46,6 +46,10 @@ function App() {
       removeTyping(msg.senderName);
     });
 
+    socket.current.on("onlineCount", (count: number) => {
+      setOnlineCount(count);
+    });
+
     return () => {
       Object.values(typingTimers.current).forEach(clearTimeout);
       typingTimers.current = {};
@@ -53,6 +57,7 @@ function App() {
       socket.current?.off("roomNotice");
       socket.current?.off("typing");
       socket.current?.off("message");
+      socket.current?.off("onlineCount");
       socket.current?.disconnect();
       socket.current = null;
     };
@@ -111,7 +116,18 @@ function App() {
                   : `${typingUsers.join(", ")} are typing`}
             </p>
           </div>
-
+          {/* green lights: one per connected person */}
+          <div className="flex items-center gap-1 shrink-0" aria-label={`${onlineCount} online`}>
+            {Array.from({ length: Math.min(onlineCount, 5) }).map((_, i) => (
+              <span
+                key={i}
+                className="h-2.5 w-2.5 rounded-full bg-green-500 shadow-[0_0_6px_2px_rgba(34,197,94,0.6)]"
+              />
+            ))}
+            {onlineCount > 5 && (
+              <span className="text-xs font-mono text-green-700">+{onlineCount - 5}</span>
+            )}
+          </div>
           <div className="px-2 py-1 border border-orange-700 rounded-md min-w-0 max-w-[40%] shrink-0">
             <p className="text-base sm:text-lg font-normal text-orange-800 truncate">{username}</p>
           </div>
