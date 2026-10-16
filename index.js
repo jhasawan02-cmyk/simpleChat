@@ -10,6 +10,8 @@ const io = new Server(server, {
         origin: "*"
     }
 });
+const joined = new Set();
+const broadcastCount = () => io.emit("onlineCount", joined.size);
 io.on('connection', (socket) => {
     socket.on("room1", (name) => {
         console.log(`${name} joined room1 with user id: ${socket.id}`);
@@ -17,6 +19,9 @@ io.on('connection', (socket) => {
         // io.emit("roomNotice",name);
         //broadcasting to evry one other then the joinee
         socket.broadcast.emit("roomNotice", name);
+        // online count
+        joined.add(socket.id);
+        broadcastCount();
     });
     //broadcasting message to all participants
     socket.on("message", (msg) => {
@@ -25,6 +30,10 @@ io.on('connection', (socket) => {
     //typer username notice
     socket.on("typing", (name) => {
         socket.broadcast.emit("typing", name);
+    });
+    socket.on("disconnect", () => {
+        if (joined.delete(socket.id))
+            broadcastCount();
     });
 });
 // //route
