@@ -14,6 +14,9 @@ const io = new Server(server,{
     }
 });
 
+const joined = new Set<string>();
+const broadcastCount = () => io.emit("onlineCount", joined.size);
+
 io.on('connection',(socket)=>{
     
 
@@ -34,6 +37,16 @@ io.on('connection',(socket)=>{
     //typer username notice
     socket.on("typing", (name) => {
     socket.broadcast.emit("typing", name);
+
+    // online count
+    socket.on("room1", () => {
+        joined.add(socket.id);
+        broadcastCount();
+    });
+
+    socket.on("disconnect", () => {
+        if (joined.delete(socket.id)) broadcastCount();
+    });
 });
 })
 
