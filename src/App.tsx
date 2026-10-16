@@ -128,7 +128,7 @@ function App() {
             {Array.from({ length: Math.min(onlineCount, 5) }).map((_, i) => (
               <span
                 key={i}
-                className="h-2.5 w-2.5 rounded-full bg-green-500 shadow-[0_0_6px_2px_rgba(34,197,94,0.6)]"
+                className="h-2 w-2 rounded-full bg-green-500 shadow-[0_0_6px_2px_rgba(34,197,94,0.6)]"
               />
             ))}
             {onlineCount > 5 && (
