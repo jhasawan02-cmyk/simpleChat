@@ -19,7 +19,6 @@ function App() {
 
   useEffect(() => {
     socket.current = connectWS();
-    let hasConnected = false;
 
     const removeTyping = (name: string) => {
       clearTimeout(typingTimers.current[name]);
@@ -29,10 +28,13 @@ function App() {
 
     socket.current.on("connect", () => {
       setMySocketId(socket.current?.id);
-      if (hasConnected && usernameRef.current) {
+      if (usernameRef.current) {
         socket.current?.emit("room1", usernameRef.current);
       }
-      hasConnected = true;
+    });
+
+    socket.current.on("disconnect", () => {
+      setOnlineCount(0);
     });
 
     socket.current.on("roomNotice", (name: string) => {
@@ -101,10 +103,12 @@ function App() {
       {/* popup at start */}
       {popup && (
         <Popup
-          socket={socket}
           onContinue={(name) => {
             usernameRef.current = name;
             setusername(name);
+            if (socket.current?.connected) {
+              socket.current.emit("room1", name);
+            }
             setpopup(false);
           }}
         />
@@ -128,7 +132,7 @@ function App() {
             {Array.from({ length: Math.min(onlineCount, 5) }).map((_, i) => (
               <span
                 key={i}
-                className="h-2 w-2 rounded-full bg-green-500 shadow-[0_0_6px_2px_rgba(34,197,94,0.6)]"
+                className="h-2 w-2 rounded-full flex flex-col bg-green-500 shadow-[0_0_6px_2px_rgba(34,197,94,0.6)]"
               />
             ))}
             {onlineCount > 5 && (

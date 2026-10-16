@@ -1,14 +1,11 @@
 import { useState } from "react";
-import type { Socket } from "socket.io-client";
-import type { RefObject } from "react";
 
 
 type PopUpProp = {
   onContinue: (name: string) => void;
-  socket: RefObject<Socket | null>;
 };
 
-function Popup({ onContinue, socket }: PopUpProp) {
+function Popup({ onContinue }: PopUpProp) {
   const [name, setusername] = useState("");
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -17,7 +14,6 @@ function Popup({ onContinue, socket }: PopUpProp) {
 
     if (!trimmedName) return;
 
-    socket.current?.emit("room1", trimmedName);
     onContinue(trimmedName);
   }
 
