@@ -54,7 +54,7 @@ function Message({ message, mySocketId }: Props) {
               }`}
           >
             <div
-              className={`max-w-[75%] rounded-xl px-2 py-2 shadow-md ${isOwnMessage ? "bg-amber-200" : "bg-gray-100"
+              className={`max-w-[85%] sm:max-w-[75%] min-w-0 rounded-xl px-2 py-2 shadow-md ${isOwnMessage ? "bg-amber-200" : "bg-gray-100"
                 }`}
             >
               {!isOwnMessage && (

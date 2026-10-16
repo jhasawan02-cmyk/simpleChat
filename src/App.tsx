@@ -86,7 +86,7 @@ function App() {
   };
 
   return (
-    <div className="h-dvh w-full overflow-hidden bg-amber-200 flex items-center justify-center p-4 sm:p-8">
+    <div className="h-dvh w-full overflow-hidden bg-amber-200 flex items-center justify-center p-0 sm:p-4 md:p-8">
       {/* popup at start */}
       {popup && (
         <Popup
@@ -98,12 +98,12 @@ function App() {
         />
       )}
       {/* chat section */}
-      <div className="flex flex-col w-full max-w-2xl h-full max-h-200 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden">
+      <div className="flex flex-col w-full max-w-2xl h-full max-h-200 bg-white border border-gray-200 sm:rounded-xl shadow-lg overflow-hidden">
         {/* header */}
-        <div className="px-3 py-2.5 border-b-2 border-amber-500 flex items-center justify-between">
-          <div className="min-w-0">
-            <p className="text-lg font-bold text-amber-800">Chat Application</p>
-            <p className="h-5 text-md font-mono text-gray-800 truncate">
+        <div className="px-3 py-2.5 border-b-2 border-amber-500 flex items-center justify-between gap-2">
+          <div className="min-w-0 flex-1">
+            <p className="text-base sm:text-lg font-bold text-amber-800 truncate">Chat Application</p>
+            <p className="h-5 text-sm sm:text-base font-mono text-gray-800 truncate">
               {typingUsers.length === 0
                 ? ""
                 : typingUsers.length === 1
@@ -112,8 +112,8 @@ function App() {
             </p>
           </div>
 
-          <div className="px-2 py-1 border border-orange-700 rounded-md">
-            <p className="text-lg font-normal text-orange-800">{username}</p>
+          <div className="px-2 py-1 border border-orange-700 rounded-md min-w-0 max-w-[40%] shrink-0">
+            <p className="text-base sm:text-lg font-normal text-orange-800 truncate">{username}</p>
           </div>
         </div>
 
@@ -129,7 +129,7 @@ function App() {
               value={input}
               onChange={handleInputChange}
               onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-              className="w-full rounded-md border border-gray-300 pl-3 pr-12 py-2 outline-none focus:ring-2 focus:ring-amber-300"
+              className="w-full rounded-md border border-gray-300 pl-3 pr-12 py-2 text-base sm:text-sm outline-none focus:ring-2 focus:ring-amber-300"
               placeholder="message..."
             />
             <button
