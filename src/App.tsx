@@ -9,6 +9,7 @@ function App() {
   const socket = useRef<Socket | null>(null);
   const [popup, setpopup] = useState(true);
   const [username, setusername] = useState("");
+  const usernameRef = useRef("");
   const [messages, setMessages] = useState<messageType[]>([]);
   const [input, setInput] = useState("");
   const [mySocketId, setMySocketId] = useState<string>();
@@ -18,6 +19,7 @@ function App() {
 
   useEffect(() => {
     socket.current = connectWS();
+    let hasConnected = false;
 
     const removeTyping = (name: string) => {
       clearTimeout(typingTimers.current[name]);
@@ -27,6 +29,10 @@ function App() {
 
     socket.current.on("connect", () => {
       setMySocketId(socket.current?.id);
+      if (hasConnected && usernameRef.current) {
+        socket.current?.emit("room1", usernameRef.current);
+      }
+      hasConnected = true;
     });
 
     socket.current.on("roomNotice", (name: string) => {
@@ -97,6 +103,7 @@ function App() {
         <Popup
           socket={socket}
           onContinue={(name) => {
+            usernameRef.current = name;
             setusername(name);
             setpopup(false);
           }}
