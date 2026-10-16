@@ -4,6 +4,8 @@ A small real-time chat application built as a hands-on project for learning how 
 
 The app lets people connected to the local server choose a display name, exchange messages, and see typing indicators. Its focus is the fundamentals of event-driven communication and React state, not production chat features.
 
+# LIVE LINK : https://simple-chat-2.vercel.app/
+
 ## What You Can Learn
 
 - How to establish and clean up a Socket.IO client connection in a React component.
